@@ -1,0 +1,7 @@
+{
+    "name": "Nextflow",
+    "id": "nextflow",
+    "version": "1.0.0",
+    "description": "Nextflow feature",
+    "installsAfter": ["ghcr.io/devcontainers/features/java:1"]
+}

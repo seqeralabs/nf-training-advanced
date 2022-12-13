@@ -1,0 +1,6 @@
+# Groovy Imports
+
+To be introduced on day #2
+
+<!-- How and when to use java.nio.files classes to make your workflows and closures more stable and resilient. Also cover Jsonslurper, org.yaml.snakeyaml.Yaml.
+Use recent resolveSibling example -->

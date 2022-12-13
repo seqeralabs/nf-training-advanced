@@ -1,0 +1,12 @@
+# Configuration
+To be introduced on day #2
+
+<!-- A fulsome tour of the places in which configuration can be loaded - how overwriting works, and pointing out the common footguns when setting configuration objects in profiles. Here is also an ideal time to point out the potential mistakes that can occur when profiles share the same name as Nextflow configuration blocks.
+Include -params-file 
+Talk about the “Danger” block	 - how to avoid the profiles footgun.
+
+Configuration priority and precedence
+Process selectors and labels
+Fully qualified selector aliases
+
+Make a note of how loading profiles drops you back to the top-level configuration block. -->

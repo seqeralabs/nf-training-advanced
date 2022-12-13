@@ -1,0 +1,38 @@
+project:
+  type: book
+
+book:
+  title: "Intermediate/Advanced Nextflow"
+  navbar:
+    logo: static/img/seqera-logo-black.png
+    background: "#ecf0f1"
+  output-file: "my-book"
+  chapters:
+    - index.qmd
+    - part: Curriculum
+      chapters:
+        - operators.qmd
+        - metadata.qmd
+        - grouping.qmd
+        - groovy.qmd
+        - structure.qmd
+        - testing.qmd
+        - configuration.qmd
+        - summary.qmd
+    - part: Support
+      chapters:
+        - support.qmd
+        - references.qmd
+
+format:
+  html:
+    smooth-scroll: true
+    theme: 
+      - cosmo
+      - workshop.scss
+
+highlight-style: ayu
+number-depth: 2
+execute:
+  eval: false
+

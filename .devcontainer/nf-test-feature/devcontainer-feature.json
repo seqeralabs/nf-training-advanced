@@ -1,0 +1,7 @@
+{
+    "name": "nf-test",
+    "id": "nf-test",
+    "version": "1.0.0",
+    "description": "nf-test feature",
+    "installsAfter": ["./nextflow-feature"]
+}

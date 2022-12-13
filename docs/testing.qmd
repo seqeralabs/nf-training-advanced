@@ -1,0 +1,12 @@
+# Troubleshooting
+
+To be introduced on day #2
+
+<!-- This is the most challenging chapter - we should probably cover nf-test, but I’d also like to talk about using -profile test. There are probably other ideas that can be included in this section, such as the -test operator in Nextflow (will need to check with Paolo to see if this is deprecated).
+Using log.info, log.warn, log.debug.
+TODO: Check out Phil’s bytesize about debugging.
+
+Use log.info log.warn etc as a segue 
+Minimal reproducible example
+Viewing channels
+Nextflow logs -->
