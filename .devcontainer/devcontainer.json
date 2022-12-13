@@ -17,7 +17,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "cd docs && quarto render && cd _book && python -m http.server",
+	"postCreateCommand": "cd docs/_book && python -m http.server",
 
 	// Configure tool-specific properties.
 	// "customizations": {},

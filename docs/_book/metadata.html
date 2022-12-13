@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Intermediate/Advanced Nextflow - 2&nbsp; Metadata Propagation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./grouping.html" rel="next">
+<link href="./operators.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./static/img/seqera-logo-black.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Intermediate/Advanced Nextflow</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Metadata Propagation</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Welcome</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Curriculum</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./operators.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Operator Tour</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./metadata.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Metadata Propagation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./grouping.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Grouping and Splitting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./groovy.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Groovy Imports</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./structure.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Workflow Structure</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./testing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Troubleshooting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./configuration.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Configuration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Summary</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Support</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./support.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Summary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#metadata-import" id="toc-metadata-import" class="nav-link active" data-scroll-target="#metadata-import"><span class="toc-section-number">2.1</span>  Metadata Import</a>
+  <ul class="collapse">
+  <li><a href="#first-pass" id="toc-first-pass" class="nav-link" data-scroll-target="#first-pass">First Pass</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Metadata Propagation</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>There are two fundamental metadata tenents in Nextflow:</p>
+<ul>
+<li>Metadata should be explicit - be extremely wary of metadata encoded in filenames</li>
+<li>Metadata should travel through channels with the data in a tuple element.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="static/img/metadata.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Instructions from on-hAI.</figcaption><p></p>
+</figure>
+</div>
+<p>While ChatGTP advocates for storing metadata in a separate file, we have even more convenient options when using Nextflow. We can pass through Groovy objects such as maps (aka dictionaries aka associative lists aka hashes).</p>
+<section id="metadata-import" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="metadata-import"><span class="header-section-number">2.1</span> Metadata Import</h2>
+<p>Ideally, you have sample information stored in a simple and structured samplesheet. These are often files in CSV/TSV format or similar. I’d like to start with a worst-case scenario where you’ve been handed a bag of files that you need to make sense of. We’ll use this example to introduce some helpful Groovy syntactic sugar and features that will be helpful in other Nextflow contexts.</p>
+<p>Given a bag of fastq reads:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> chapter_02_metadata</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">tree</span> data/reads</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>data/reads/
+|-- treatmentA
+|   |-- sampleA_rep1_normal_R1.fastq.gz
+|   |-- sampleA_rep1_normal_R2.fastq.gz
+|   |-- sampleA_rep1_tumor_R1.fastq.gz
+|   |-- sampleA_rep1_tumor_R2.fastq.gz
+|   |-- sampleA_rep2_normal_R1.fastq.gz
+|   |-- sampleA_rep2_normal_R2.fastq.gz
+|   |-- sampleA_rep2_tumor_R1.fastq.gz
+|   |-- sampleA_rep2_tumor_R2.fastq.gz
+|   |-- sampleB_rep1_normal_R1.fastq.gz
+|   |-- sampleB_rep1_normal_R2.fastq.gz
+|   |-- sampleB_rep1_tumor_R1.fastq.gz
+|   |-- sampleB_rep1_tumor_R2.fastq.gz
+|   |-- sampleC_rep1_normal_R1.fastq.gz
+|   |-- sampleC_rep1_normal_R2.fastq.gz
+|   |-- sampleC_rep1_tumor_R1.fastq.gz
+|   `-- sampleC_rep1_tumor_R2.fastq.gz
+`-- treatmentB
+    |-- sampleA_rep1_normal_R1.fastq.gz
+    |-- sampleA_rep1_normal_R2.fastq.gz
+    |-- sampleA_rep1_tumor_R1.fastq.gz
+    `-- sampleA_rep1_tumor_R2.fastq.gz</code></pre>
+<div class="callout-warning callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Whomever has handed us these files has encoded metadata in both the filename, but also the name of the parent directories <code>treatmentA</code> and <code>treatmentB</code>.</p>
+</div>
+</div>
+<section id="first-pass" class="level3">
+<h3 class="anchored" data-anchor-id="first-pass">First Pass</h3>
+<p>A first pass attempt at pulling these files into Nextflow might use the <code>fromFilePairs</code> method:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromFilePairs</span><span class="op">(</span><span class="st">"data/reads/*/*_R{1,2}.fastq.gz"</span><span class="op">)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Nextflow will pull out the first part of the fastq filename and returned us a channel of tuple elements where the first element is the filename-derived ID and the second element is a list of two fastq files.</p>
+<p>The id is stored as a simple string. We’d like to move to using a map of key-value pairs because we have more than one piece of metadata to track. In this example, we have sample, replicate, tumor/normal, and treatment. We could add extra elements to the tuple, but this changes the ‘cardinality’ of the elements in the channel and adding extra elements would require updating all downstream processes. A map is a single object and is passed through Nextflow channels as one value, so adding extra metadata fields will not require us to change the cardinality of the downstream processes.</p>
+<p>There are a couple of different ways we can pull out the metadata</p>
+<p>We can use the <code>tokenize</code> method to split our id. To sanity-check, I just pipe the result directly into the <code>view</code> operator.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromFilePairs</span><span class="op">(</span><span class="st">"data/reads/*/*_R{1,2}.fastq.gz"</span><span class="op">)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> id<span class="op">,</span> reads <span class="op">-&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        tokens <span class="op">=</span> id<span class="op">.</span><span class="fu">tokenize</span><span class="op">(</span><span class="st">"_"</span><span class="op">)</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If we are confident about the stability of the naming scheme, we can destructure the list returned by <code>tokenize</code> and assign them to variables directly:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>map <span class="op">{</span> id<span class="op">,</span> reads <span class="op">-&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">(</span>sample<span class="op">,</span> replicate<span class="op">,</span> type<span class="op">)</span> <span class="op">=</span> id<span class="op">.</span><span class="fu">tokenize</span><span class="op">(</span><span class="st">"_"</span><span class="op">)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    meta <span class="op">=</span> <span class="op">[</span>sample<span class="op">:</span>sample<span class="op">,</span> replicate<span class="op">:</span>replicate<span class="op">,</span> type<span class="op">:</span>type<span class="op">]</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>meta<span class="op">,</span> reads<span class="op">]</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Destructuring requires parentheses
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Make sure that you’re using a tuple with parentheses e.g.&nbsp;<code>(one, two)</code> rather than a List e.g.&nbsp;<code>[one, two]</code></p>
+</div>
+</div>
+<p>Another option is to use the <a href="https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#transpose(java.util.List)"><code>transpose</code></a> method with the <a href="https://docs.groovy-lang.org/latest/html/api/org/codehaus/groovy/runtime/DefaultGroovyMethods.html#collectEntries(E%5B%5D)"><code>collectEntries()</code></a> to produce the same map. I’d warn that this method is bordering on a little ‘too clever’ and is more difficult to read. It also assumes that the order of the filename-encoded metadata is consistent.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>map <span class="op">{</span> id<span class="op">,</span> reads <span class="op">-&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    meta <span class="op">=</span> <span class="op">[</span>id<span class="op">.</span><span class="fu">tokenize</span><span class="op">(</span><span class="st">"_"</span><span class="op">),</span> <span class="op">[</span><span class="st">'sample'</span><span class="op">,</span> <span class="st">'replicate'</span><span class="op">,</span> <span class="st">'type'</span><span class="op">]]</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">transpose</span><span class="op">()</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">collectEntries</span><span class="op">()</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>meta<span class="op">,</span> reads<span class="op">]</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If we move back to the previous method, but decided that the ‘rep’ prefix on the replicate should be removed, we can use regular expressions to simply “subtract” pieces of a string. Here we remove a ‘rep’ prefix from the <code>replicate</code> variable if the prefix is present:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>map <span class="op">{</span> id<span class="op">,</span> reads <span class="op">-&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">(</span>sample<span class="op">,</span> replicate<span class="op">,</span> type<span class="op">)</span> <span class="op">=</span> id<span class="op">.</span><span class="fu">tokenize</span><span class="op">(</span><span class="st">"_"</span><span class="op">)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    replicate <span class="op">-=</span> <span class="op">~</span><span class="st">/^rep/</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    meta <span class="op">=</span> <span class="op">[</span>sample<span class="op">:</span>sample<span class="op">,</span> replicate<span class="op">:</span>replicate<span class="op">,</span> type<span class="op">:</span>type<span class="op">]</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>meta<span class="op">,</span> reads<span class="op">]</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Trim strings
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Groovy has a lot of very helpful syntactic sugar for string manipulation. You can trim parts of a string by simply subtracting another string:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>demo <span class="op">=</span> <span class="st">"one two three"</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">assertEquals</span><span class="op">(</span>demo <span class="op">-</span> <span class="st">"two "</span><span class="op">,</span> <span class="st">"one three"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>… or by subtracting a regular expression:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>demo <span class="op">=</span> <span class="st">"one two three"</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">assertEquals</span><span class="op">(</span>demo <span class="op">-</span> <span class="op">~</span><span class="st">/t.o ?/</span><span class="op">,</span> <span class="st">"one three"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To quickly sanity-check a groovy expression, try the <a href="https://groovyconsole.appspot.com/">Groovy web console</a></p>
+</div>
+</div>
+<p>We are almost there, but the we still don’t have the “treatment” metadata captured in our meta map. The treament is encoded in this example in the name of the parent directory relative to the reads. Inside the map object, the reads are a list of two UnixPath objects. These objects implement the <a href="https://docs.oracle.com/javase/7/docs/api/java/nio/file/Path.html"><code>java.nio.Path</code></a> interface, which provides us many useful methods, including <code>getParent()</code>.</p>
+<p>We can call the <code>getParent()</code> method on each of the paths like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>map <span class="op">{</span> id<span class="op">,</span> reads <span class="op">-&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    reads<span class="op">.</span><span class="fu">collect</span> <span class="op">{</span> it<span class="op">.</span><span class="fu">getParent</span><span class="op">()</span> <span class="op">}</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If we want to call a set method on every item in a Collection, Groovy provides this convenient “spread dot” notation:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>map <span class="op">{</span> id<span class="op">,</span> reads <span class="op">-&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    reads<span class="op">*.</span><span class="fu">getParent</span><span class="op">()</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>this returns another Path object, but we only want the name of the last directory, so we need to call <code>.getName()</code> method on each of these Paths. We can use the spread-dot notation again:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>map <span class="op">{</span> id<span class="op">,</span> reads <span class="op">-&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    reads<span class="op">*.</span><span class="fu">getParent</span><span class="op">()*.</span><span class="fu">getName</span><span class="op">()</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The last piece of Groovy sugar is to note that methods with <code>get</code> and <code>set</code> prefixes can be called with a property-style notation, converting <code>getParent()</code> to <code>parent</code> and <code>getName()</code> to <code>name</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>map <span class="op">{</span> id<span class="op">,</span> reads <span class="op">-&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    reads<span class="op">*.</span>parent<span class="op">*.</span>name</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If we wanted to remove the “treatment” prefix, we can combine this new notation with the “minus” method which we used earlier in the aliased <code>-</code> form.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>map <span class="op">{</span> id<span class="op">,</span> reads <span class="op">-&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    reads<span class="op">*.</span>parent<span class="op">*.</span>name<span class="op">*.</span><span class="fu">minus</span><span class="op">(~</span><span class="st">/treatment/</span><span class="op">)</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In this particular example, we know ahead of time that the treatments must be the same because of the way the <code>fromFilePairs</code> method gathers pairs, but we’ll continue for the sake of the demonstration. Our final <code>map</code> closure might look like:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromFilePairs</span><span class="op">(</span><span class="st">"data/reads/*/*_R{1,2}.fastq.gz"</span><span class="op">)</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> id<span class="op">,</span> reads <span class="op">-&gt;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>        <span class="op">(</span>sample<span class="op">,</span> replicate<span class="op">,</span> type<span class="op">)</span> <span class="op">=</span> id<span class="op">.</span><span class="fu">tokenize</span><span class="op">(</span><span class="st">"_"</span><span class="op">)</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">(</span>treatmentFwd<span class="op">,</span> treatmentRev<span class="op">)</span> <span class="op">=</span> reads<span class="op">*.</span>parent<span class="op">*.</span>name<span class="op">*.</span><span class="fu">minus</span><span class="op">(~</span><span class="st">/treatment/</span><span class="op">)</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        meta <span class="op">=</span> <span class="op">[</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>            sample<span class="op">:</span>sample<span class="op">,</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>            replicate<span class="op">:</span>replicate<span class="op">,</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>            type<span class="op">:</span>type<span class="op">,</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>            treatmentFwd<span class="op">:</span>treatmentFwd<span class="op">,</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>            treatmentRev<span class="op">:</span>treatmentRev<span class="op">,</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>        <span class="op">]</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>        <span class="op">[</span>meta<span class="op">,</span> reads<span class="op">]</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This metadata map can be passed through the workflow with the reads and used to split, join and recombine the data. The resulting channel would be suitable for any Nextflow process with inputs of the form</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>process ExampleProcess <span class="op">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    input<span class="op">:</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>meta<span class="op">),</span> <span class="fu">path</span><span class="op">(</span>reads<span class="op">)</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This channel “shape” or cardinarlity is extremely common in nf-core modules and subworkflows and is criticial to enabling reusability of these modules.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./operators.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Operator Tour</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./grouping.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Grouping and Splitting</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

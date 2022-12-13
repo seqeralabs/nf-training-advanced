@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Intermediate/Advanced Nextflow - 3&nbsp; Grouping and Splitting</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./groovy.html" rel="next">
+<link href="./metadata.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./static/img/seqera-logo-black.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Intermediate/Advanced Nextflow</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Grouping and Splitting</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Welcome</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Curriculum</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./operators.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Operator Tour</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./metadata.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Metadata Propagation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./grouping.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Grouping and Splitting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./groovy.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Groovy Imports</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./structure.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Workflow Structure</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./testing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Troubleshooting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./configuration.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Configuration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Summary</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Support</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./support.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Summary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#grouping-using-submap" id="toc-grouping-using-submap" class="nav-link active" data-scroll-target="#grouping-using-submap"><span class="toc-section-number">3.1</span>  Grouping using subMap</a>
+  <ul class="collapse">
+  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise">Exercise</a></li>
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise</a></li>
+  </ul></li>
+  <li><a href="#passing-maps-through-processes" id="toc-passing-maps-through-processes" class="nav-link" data-scroll-target="#passing-maps-through-processes"><span class="toc-section-number">3.2</span>  Passing maps through processes</a>
+  <ul class="collapse">
+  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise</a></li>
+  </ul></li>
+  <li><a href="#fanning-out-over-intervals" id="toc-fanning-out-over-intervals" class="nav-link" data-scroll-target="#fanning-out-over-intervals"><span class="toc-section-number">3.3</span>  Fanning out over intervals</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Grouping and Splitting</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="grouping-using-submap" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="grouping-using-submap"><span class="header-section-number">3.1</span> Grouping using subMap</h2>
+<p>Now that we have a channel that conforms to the <code>tuple val(meta) path(&lt;something&gt;)</code> pattern, we can investigate splitting and grouping patterns.</p>
+<p>We’ll start with a simple main.nf in the <code>chapter_03_grouping</code> directory</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> chapter_03_grouping</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>main.nf</strong></pre>
+</div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span><span class="st">"data/samplesheet.csv"</span><span class="op">)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="fu">splitCsv</span><span class="op">(</span> header<span class="op">:</span><span class="kw">true</span> <span class="op">)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> row <span class="op">-&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        meta <span class="op">=</span> <span class="op">[</span>id<span class="op">:</span>row<span class="op">.</span>id<span class="op">,</span> repeat<span class="op">:</span>row<span class="op">.</span>repeat<span class="op">,</span> type<span class="op">:</span>row<span class="op">.</span>type<span class="op">]</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">[</span>meta<span class="op">,</span> <span class="op">[</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">file</span><span class="op">(</span>row<span class="op">.</span>fastq1<span class="op">,</span> checkIfExists<span class="op">:</span> <span class="kw">true</span><span class="op">),</span> </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>            <span class="fu">file</span><span class="op">(</span>row<span class="op">.</span>fastq2<span class="op">,</span> checkIfExists<span class="op">:</span> <span class="kw">true</span><span class="op">)]]</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p>The first change we’re going to make is to correct some repetitive code that we’ve seen quite a lot already in this workshop. The construction of the meta map from this row stutters quite a lot. We can make use of the <a href="https://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/Map.html#subMap(java.util.Collection)"><code>subMap</code></a> method available Maps to quickly return a new map constructed from the subset of an existing map:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span><span class="st">"data/samplesheet.csv"</span><span class="op">)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="fu">splitCsv</span><span class="op">(</span> header<span class="op">:</span><span class="kw">true</span> <span class="op">)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> row <span class="op">-&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        meta <span class="op">=</span> row<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span><span class="st">'id'</span><span class="op">,</span> <span class="st">'repeat'</span><span class="op">,</span> <span class="st">'type'</span><span class="op">)</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">[</span>meta<span class="op">,</span> <span class="op">[</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">file</span><span class="op">(</span>row<span class="op">.</span>fastq1<span class="op">,</span> checkIfExists<span class="op">:</span> <span class="kw">true</span><span class="op">),</span> </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>            <span class="fu">file</span><span class="op">(</span>row<span class="op">.</span>fastq2<span class="op">,</span> checkIfExists<span class="op">:</span> <span class="kw">true</span><span class="op">)]]</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Complete meta map safety
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <code>subMap</code> method will take a collection of keys and construct a <em>new</em> map with just the keys listed in the collection. This method, in combination with the <code>plus</code> or <code>+</code> method for combining maps and resetting values should allow all contraction, expansion and modification of maps safely.</p>
+</div>
+</div>
+<section id="exercise" class="level3">
+<h3 class="anchored" data-anchor-id="exercise">Exercise</h3>
+<p>Can you extend our workflow in an <em>unsafe</em> manner? Use the <code>set</code> operator to name the channel in our worflow above, and then <code>map</code> (the operator) over that without modification. In a separate map operation, try modifying the meta map in a way that is reflected in the first map.</p>
+<p>Note that we’re trying to do the <em>wrong</em> thing in this example to clarify what the correct approach might be.</p>
+<details>
+<summary>
+Show answer
+</summary>
+<p>To ensure that the modification of the map happens first, we introduce a <code>sleep</code> into the first map operation. This <code>sleep</code> emulates a long-running Nextflow process.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span><span class="st">"data/samplesheet.csv"</span><span class="op">)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="fu">splitCsv</span><span class="op">(</span> header<span class="op">:</span><span class="kw">true</span> <span class="op">)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> row <span class="op">-&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        meta <span class="op">=</span> row<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span><span class="st">'id'</span><span class="op">,</span> <span class="st">'repeat'</span><span class="op">,</span> <span class="st">'type'</span><span class="op">)</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">[</span>meta<span class="op">,</span> <span class="op">[</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">file</span><span class="op">(</span>row<span class="op">.</span>fastq1<span class="op">,</span> checkIfExists<span class="op">:</span> <span class="kw">true</span><span class="op">),</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>            <span class="fu">file</span><span class="op">(</span>row<span class="op">.</span>fastq2<span class="op">,</span> checkIfExists<span class="op">:</span> <span class="kw">true</span><span class="op">)]]</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> set <span class="op">{</span> samples <span class="op">}</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    samples</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> sleep <span class="dv">10</span><span class="op">;</span> it <span class="op">}</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view <span class="op">{</span> meta<span class="op">,</span> reads <span class="op">-&gt;</span> <span class="st">"Should be unmodified: </span><span class="ss">$meta</span><span class="st">"</span> <span class="op">}</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    samples</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> meta<span class="op">,</span> reads <span class="op">-&gt;</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        meta<span class="op">.</span>type <span class="op">=</span> meta<span class="op">.</span>type <span class="op">==</span> <span class="st">"tumor"</span> <span class="op">?</span> <span class="st">"abnormal"</span> <span class="op">:</span> <span class="st">"normal"</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        <span class="op">[</span>meta<span class="op">,</span> reads<span class="op">]</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view <span class="op">{</span> meta<span class="op">,</span> reads <span class="op">-&gt;</span> <span class="st">"Should be modified: </span><span class="ss">$meta</span><span class="st">"</span> <span class="op">}</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+</section>
+<section id="exercise-1" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-1">Exercise</h3>
+<p>How would you fix the example above to use the safe operators <code>plus</code> and <code>subMap</code> to ensure that the original map remains unmodified?</p>
+<details>
+<summary>
+Show answer
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span><span class="st">"data/samplesheet.csv"</span><span class="op">)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="fu">splitCsv</span><span class="op">(</span> header<span class="op">:</span><span class="kw">true</span> <span class="op">)</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> row <span class="op">-&gt;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        meta <span class="op">=</span> row<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span><span class="st">'id'</span><span class="op">,</span> <span class="st">'repeat'</span><span class="op">,</span> <span class="st">'type'</span><span class="op">)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">[</span>meta<span class="op">,</span> <span class="op">[</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">file</span><span class="op">(</span>row<span class="op">.</span>fastq1<span class="op">,</span> checkIfExists<span class="op">:</span> <span class="kw">true</span><span class="op">),</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>            <span class="fu">file</span><span class="op">(</span>row<span class="op">.</span>fastq2<span class="op">,</span> checkIfExists<span class="op">:</span> <span class="kw">true</span><span class="op">)]]</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> set <span class="op">{</span> samples <span class="op">}</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    samples</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> sleep <span class="dv">10</span><span class="op">;</span> it <span class="op">}</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view <span class="op">{</span> meta<span class="op">,</span> reads <span class="op">-&gt;</span> <span class="st">"Should be unmodified: </span><span class="ss">$meta</span><span class="st">"</span> <span class="op">}</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    samples</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> meta<span class="op">,</span> reads <span class="op">-&gt;</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        newmap <span class="op">=</span> <span class="op">[</span>type<span class="op">:</span> meta<span class="op">.</span>type <span class="op">==</span> <span class="st">"tumor"</span> <span class="op">?</span> <span class="st">"abnormal"</span> <span class="op">:</span> <span class="st">"normal"</span><span class="op">]</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        <span class="op">[</span>meta <span class="op">+</span> newmap<span class="op">,</span> reads<span class="op">]</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view <span class="op">{</span> meta<span class="op">,</span> reads <span class="op">-&gt;</span> <span class="st">"Should be modified: </span><span class="ss">$meta</span><span class="st">"</span> <span class="op">}</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+</section>
+</section>
+<section id="passing-maps-through-processes" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="passing-maps-through-processes"><span class="header-section-number">3.2</span> Passing maps through processes</h2>
+<p>Let’s construct a dummy read mapping process. This is not a bioinformatics workshop, so we can ‘cheat’ in the interests of time.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>process MapReads <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    input<span class="op">:</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>meta<span class="op">),</span> <span class="fu">path</span><span class="op">(</span>reads<span class="op">)</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">path</span><span class="op">(</span>genome<span class="op">)</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    output<span class="op">:</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>meta<span class="op">),</span> <span class="fu">path</span><span class="op">(</span><span class="st">"*.bam"</span><span class="op">)</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"touch out.bam"</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    reference <span class="op">=</span> <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span><span class="st">"data/genome.fasta"</span><span class="op">).</span><span class="fu">first</span><span class="op">()</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span><span class="st">"data/samplesheet.csv"</span><span class="op">)</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="fu">splitCsv</span><span class="op">(</span> header<span class="op">:</span><span class="kw">true</span> <span class="op">)</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> row <span class="op">-&gt;</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        meta <span class="op">=</span> row<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span><span class="st">'id'</span><span class="op">,</span> <span class="st">'repeat'</span><span class="op">,</span> <span class="st">'type'</span><span class="op">)</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        <span class="op">[</span>meta<span class="op">,</span> <span class="op">[</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>            <span class="fu">file</span><span class="op">(</span>row<span class="op">.</span>fastq1<span class="op">,</span> checkIfExists<span class="op">:</span> <span class="kw">true</span><span class="op">),</span> </span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>            <span class="fu">file</span><span class="op">(</span>row<span class="op">.</span>fastq2<span class="op">,</span> checkIfExists<span class="op">:</span> <span class="kw">true</span><span class="op">)]]</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> set <span class="op">{</span> samples <span class="op">}</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">MapReads</span><span class="op">(</span> samples<span class="op">,</span> reference <span class="op">)</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s consider that we might now want to merge the repeats. We’ll need to group bams that share the <code>id</code> and <code>type</code> attributes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapReads</span><span class="op">(</span> samples<span class="op">,</span> reference <span class="op">)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> map <span class="op">{</span> meta<span class="op">,</span> bam <span class="op">-&gt;</span> <span class="op">[</span>meta<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span><span class="st">'id'</span><span class="op">,</span> <span class="st">'type'</span><span class="op">),</span> bam<span class="op">]}</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> groupTuple</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> view</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is easy enough, but the <code>groupTuple</code> operator has to wait until all items are emitted from the incoming queue before it is able to reassemble the output queue. If even one read mapping job takes a long time, the processing of all other samples is held up. We need a way of signalling to nextflow how many items are in a given group so that items can be emitted as early as possible.</p>
+<p>By default, the <code>groupTuple</code> operator groups on the first item in the element, which at the moment is a <code>Map</code>. We can turn this map into a special class using the <code>groupKey</code> method, which takes our grouping object as a first parameter and the number of expected elements in the second parameter.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapReads</span><span class="op">(</span> samples<span class="op">,</span> reference <span class="op">)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> map <span class="op">{</span> meta<span class="op">,</span> bam <span class="op">-&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    key <span class="op">=</span> <span class="fu">groupKey</span><span class="op">(</span>meta<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span><span class="st">'id'</span><span class="op">,</span> <span class="st">'type'</span><span class="op">),</span> NUMBER_OF_ITEMS_IN_GROUP<span class="op">)</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>key<span class="op">,</span> bam<span class="op">]</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> groupTuple</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> view </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="exercise-2" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-2">Exercise</h3>
+<p>How might we modify the upstream channels to the number of repeats into the metamap?</p>
+<details>
+<summary>
+Show answer
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    reference <span class="op">=</span> <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span><span class="st">"data/genome.fasta"</span><span class="op">).</span><span class="fu">first</span><span class="op">()</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span><span class="st">"data/samplesheet.csv"</span><span class="op">)</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="fu">splitCsv</span><span class="op">(</span> header<span class="op">:</span><span class="kw">true</span> <span class="op">)</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> row <span class="op">-&gt;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        meta <span class="op">=</span> row<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span><span class="st">'id'</span><span class="op">,</span> <span class="st">'repeat'</span><span class="op">,</span> <span class="st">'type'</span><span class="op">)</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">[</span>meta<span class="op">,</span> <span class="op">[</span><span class="fu">file</span><span class="op">(</span>row<span class="op">.</span>fastq1<span class="op">,</span> checkIfExists<span class="op">:</span> <span class="kw">true</span><span class="op">),</span> <span class="fu">file</span><span class="op">(</span>row<span class="op">.</span>fastq2<span class="op">,</span> checkIfExists<span class="op">:</span> <span class="kw">true</span><span class="op">)]]</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> meta<span class="op">,</span> reads <span class="op">-&gt;</span> <span class="op">[</span>meta<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span><span class="st">'id'</span><span class="op">,</span> <span class="st">'type'</span><span class="op">),</span> meta<span class="op">.</span>repeat<span class="op">,</span> reads<span class="op">]</span> <span class="op">}</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> groupTuple</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> meta<span class="op">,</span> repeats<span class="op">,</span> reads <span class="op">-&gt;</span> <span class="op">[</span>meta <span class="op">+</span> <span class="op">[</span>repeatcount<span class="op">:</span>repeats<span class="op">.</span><span class="fu">size</span><span class="op">()],</span> repeats<span class="op">,</span> reads<span class="op">]</span> <span class="op">}</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> transpose</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> meta<span class="op">,</span> repeat<span class="op">,</span> reads <span class="op">-&gt;</span> <span class="op">[</span>meta <span class="op">+</span> <span class="op">[</span>repeat<span class="op">:</span>repeat<span class="op">],</span> reads<span class="op">]}</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> set <span class="op">{</span> samples <span class="op">}</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">MapReads</span><span class="op">(</span> samples<span class="op">,</span> reference <span class="op">)</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> meta<span class="op">,</span> bam <span class="op">-&gt;</span> </span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        key <span class="op">=</span> <span class="fu">groupKey</span><span class="op">(</span>meta<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span><span class="st">'id'</span><span class="op">,</span> <span class="st">'type'</span><span class="op">),</span> meta<span class="op">.</span>repeatcount<span class="op">)</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>        <span class="op">[</span>key<span class="op">,</span> bam<span class="op">]</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> groupTuple</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view </span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<p>Now that we have our repeats together in an output channel, we can combine them using advanced bioinformatics<e2>&lt;84&gt;<a2></a2></e2></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>process CombineBams <span class="op">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    input<span class="op">:</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>meta<span class="op">),</span> <span class="fu">path</span><span class="op">(</span><span class="st">"input/in_*_.bam"</span><span class="op">)</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    output<span class="op">:</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>meta<span class="op">),</span> <span class="fu">path</span><span class="op">(</span><span class="st">"combined.bam"</span><span class="op">)</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cat input/*.bam &gt; combined.bam"</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In our workflow:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapReads</span><span class="op">(</span> samples<span class="op">,</span> reference <span class="op">)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> map <span class="op">{</span> meta<span class="op">,</span> bam <span class="op">-&gt;</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    key <span class="op">=</span> <span class="fu">groupKey</span><span class="op">(</span>meta<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span><span class="st">'id'</span><span class="op">,</span> <span class="st">'type'</span><span class="op">),</span> meta<span class="op">.</span>repeatcount<span class="op">)</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>key<span class="op">,</span> bam<span class="op">]</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> groupTuple</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> CombineBams</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="fanning-out-over-intervals" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="fanning-out-over-intervals"><span class="header-section-number">3.3</span> Fanning out over intervals</h2>
+<p>The previous exercise demonstrated the fan-in approach using <code>groupTuple</code> and <code>groupKey</code>, but we might want to fan out our processes. An example might be computing over some intervals - genotyping over intervals, for example.</p>
+<p>We can take an existing bed file, for example and turn it into a channel of Maps.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span><span class="st">"data/intervals.bed"</span><span class="op">)</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> <span class="fu">splitCsv</span><span class="op">(</span>header<span class="op">:</span> <span class="op">[</span><span class="st">'chr'</span><span class="op">,</span> <span class="st">'start'</span><span class="op">,</span> <span class="st">'stop'</span><span class="op">,</span> <span class="st">'name'</span><span class="op">],</span> sep<span class="op">:</span> <span class="st">'</span><span class="sc">\t</span><span class="st">'</span><span class="op">)</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> collectFile <span class="op">{</span> entry <span class="op">-&gt;</span> <span class="op">[</span><span class="st">"</span><span class="ss">${</span>entry<span class="op">.</span>name<span class="ss">}</span><span class="st">.bed"</span><span class="op">,</span> entry<span class="op">*.</span>value<span class="op">.</span><span class="fu">join</span><span class="op">(</span><span class="st">"</span><span class="sc">\t</span><span class="st">"</span><span class="op">)]</span> <span class="op">}</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> view</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> set <span class="op">{</span> intervals <span class="op">}</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Quick return
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the example above, I add a <code>return</code> statement for quick debugging. This ensures that all workflow operations after the <code>return</code> are not included in the process DAG.</p>
+</div>
+</div>
+<p>Given a dummy genotyping process</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>process GenotypeOnInterval <span class="op">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    input<span class="op">:</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>meta<span class="op">),</span> <span class="fu">path</span><span class="op">(</span>bam<span class="op">),</span> <span class="fu">path</span><span class="op">(</span>bed<span class="op">)</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    output<span class="op">:</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>meta<span class="op">),</span> <span class="fu">path</span><span class="op">(</span><span class="st">"genotyped.bam"</span><span class="op">)</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cat </span><span class="ss">$bam</span><span class="st"> </span><span class="ss">$bed</span><span class="st"> &gt; genotyped.bam"</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can use the <code>combine</code> operator to emit a new channel where each combined bam is attached to each bed file. These can then be piped into the genotyping process:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapReads</span><span class="op">(</span> samples<span class="op">,</span> reference <span class="op">)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> map <span class="op">{</span> meta<span class="op">,</span> bam <span class="op">-&gt;</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    key <span class="op">=</span> <span class="fu">groupKey</span><span class="op">(</span>meta<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span><span class="st">'id'</span><span class="op">,</span> <span class="st">'type'</span><span class="op">),</span> meta<span class="op">.</span>repeatcount<span class="op">)</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>key<span class="op">,</span> bam<span class="op">]</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> groupTuple</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> CombineBams</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> <span class="fu">combine</span><span class="op">(</span> intervals <span class="op">)</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> GenotypeOnInterval</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> view </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, we can combine these genotyped bams back using <code>groupTuple</code> and another bam merge process:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>process MergeGenotyped <span class="op">{</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    input<span class="op">:</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>meta<span class="op">),</span> <span class="fu">path</span><span class="op">(</span><span class="st">"input/in_*_.bam"</span><span class="op">)</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    output<span class="op">:</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>meta<span class="op">),</span> <span class="fu">path</span><span class="op">(</span><span class="st">"merged.genotyped.bam"</span><span class="op">)</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cat input/*.bam &gt; merged.genotyped.bam"</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapReads</span><span class="op">(</span> samples<span class="op">,</span> reference <span class="op">)</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> map <span class="op">{</span> meta<span class="op">,</span> bam <span class="op">-&gt;</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    key <span class="op">=</span> <span class="fu">groupKey</span><span class="op">(</span>meta<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span><span class="st">'id'</span><span class="op">,</span> <span class="st">'type'</span><span class="op">),</span> meta<span class="op">.</span>repeatcount<span class="op">)</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>key<span class="op">,</span> bam<span class="op">]</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> groupTuple</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> CombineBams</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> map <span class="op">{</span> meta<span class="op">,</span> bam <span class="op">-&gt;</span> <span class="op">[</span>meta<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span><span class="st">'id'</span><span class="op">,</span> <span class="st">'type'</span><span class="op">),</span> bam<span class="op">]</span> <span class="op">}</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> <span class="fu">combine</span><span class="op">(</span> intervals <span class="op">)</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> GenotypeOnInterval</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> groupTuple</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> MergeGenotyped</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> view</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./metadata.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Metadata Propagation</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./groovy.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Groovy Imports</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
