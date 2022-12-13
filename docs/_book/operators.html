@@ -344,7 +344,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>N E X T F L O W  ~  version 22.10.4
-Launching `./main.nf` [jolly_lalande] DSL2 - revision: f3c3e751fe
+Launching `./main.nf` [lonely_williams] DSL2 - revision: f3c3e751fe
 3
 6
 11
@@ -392,7 +392,7 @@ Launching `./main.nf` [jolly_lalande] DSL2 - revision: f3c3e751fe
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>N E X T F L O W  ~  version 22.10.4
-Launching `./main.nf` [angry_agnesi] DSL2 - revision: 987db913a7
+Launching `./main.nf` [thirsty_hoover] DSL2 - revision: 987db913a7
 Found '10' (class java.lang.Integer)
 Found '20' (class java.lang.Integer)
 Found '30' (class java.lang.Integer)
@@ -426,7 +426,7 @@ Most closures will remain anonymous
 </div>
 <section id="exercise" class="level3">
 <h3 class="anchored" data-anchor-id="exercise">Exercise</h3>
-<p>From the directory <code>chapter_02_operators</code>, use the <code>splitCsv</code> and <code>map</code> operators to create a channel that would be suitable input to the</p>
+<p>From the directory <code>chapter_01_operators</code>, use the <code>splitCsv</code> and <code>map</code> operators to create a channel that would be suitable input to the</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>process FastQC <span class="op">{</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    input<span class="op">:</span></span>
@@ -482,7 +482,7 @@ Convert Strings to Paths
 <p>The <code>multiMap</code> operator is a way of creating multiple channels from a single source.</p>
 <p>Let’s assume we’ve been given a sampleshee that has tumor/normal pairs bundled together on the same row.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> chapter_02_operators</span>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> chapter_01_operators</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/samplesheet.ugly.csv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Using the <code>splitCsv</code> operator would give us one entry that would contain all four fastq files. Let’s consider that we wanted to split these fastqs into separate channels for tumor and normal, we could use <code>mutliMap</code>:</p>
@@ -668,7 +668,7 @@ Merging maps is safe
 <span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>N E X T F L O W  ~  version 22.10.4
-Launching `./main.nf` [evil_mirzakhani] DSL2 - revision: 7dc1cc0039
+Launching `./main.nf` [festering_hoover] DSL2 - revision: 7dc1cc0039
 [[id:sampleA, type:normal], [1, 2], [[data/reads/sampleA_rep1_normal_R1.fastq.gz, data/reads/sampleA_rep1_normal_R2.fastq.gz], [data/reads/sampleA_rep2_normal_R1.fastq.gz, data/reads/sampleA_rep2_normal_R2.fastq.gz]]]
 [[id:sampleA, type:tumor], [1, 2], [[data/reads/sampleA_rep1_tumor_R1.fastq.gz, data/reads/sampleA_rep1_tumor_R2.fastq.gz], [data/reads/sampleA_rep2_tumor_R1.fastq.gz, data/reads/sampleA_rep2_tumor_R2.fastq.gz]]]
 [[id:sampleB, type:normal], [1], [[data/reads/sampleB_rep1_normal_R1.fastq.gz, data/reads/sampleB_rep1_normal_R2.fastq.gz]]]
@@ -692,7 +692,7 @@ Launching `./main.nf` [evil_mirzakhani] DSL2 - revision: 7dc1cc0039
 <span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>N E X T F L O W  ~  version 22.10.4
-Launching `./main.nf` [tender_mcclintock] DSL2 - revision: 2c5476b133
+Launching `./main.nf` [nasty_raman] DSL2 - revision: 2c5476b133
 [[id:sampleA, type:normal], 1, [data/reads/sampleA_rep1_normal_R1.fastq.gz, data/reads/sampleA_rep1_normal_R2.fastq.gz]]
 [[id:sampleA, type:normal], 2, [data/reads/sampleA_rep2_normal_R1.fastq.gz, data/reads/sampleA_rep2_normal_R2.fastq.gz]]
 [[id:sampleA, type:tumor], 1, [data/reads/sampleA_rep1_tumor_R1.fastq.gz, data/reads/sampleA_rep1_tumor_R2.fastq.gz]]
