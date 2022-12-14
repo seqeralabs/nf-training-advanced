@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Intermediate/Advanced Nextflow - 7&nbsp; Configuration</title>
+<title>Intermediate/Advanced Nextflow - 6&nbsp; Configuration</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./summary.html" rel="next">
-<link href="./testing.html" rel="prev">
+<link href="./testing.html" rel="next">
+<link href="./structure.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -84,7 +84,7 @@ ul.task-list li input[type="checkbox"] {
     </nav>
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Configuration</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Configuration</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -142,12 +142,12 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./testing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Troubleshooting</span></a>
+  <a href="./configuration.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Configuration</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./configuration.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Configuration</span></a>
+  <a href="./testing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Troubleshooting</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -182,14 +182,20 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#precedence" id="toc-precedence" class="nav-link active" data-scroll-target="#precedence"><span class="toc-section-number">6.1</span>  Precedence</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Configuration</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Configuration</span></h1>
 </div>
 
 
@@ -205,6 +211,22 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 <p>To be introduced on day #2</p>
+<p>This is an aspect of Nextflow that can be confusing. There are multiple ways of loading configuration and parameters into a Nextflow. This gives us two complications:</p>
+<ul>
+<li>At which location should I be loading a configuration value?</li>
+<li>Given a particular parameter, how do I know where it was set?</li>
+</ul>
+<section id="precedence" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="precedence"><span class="header-section-number">6.1</span> Precedence</h2>
+<ol type="1">
+<li>Parameters specified on the command line (–something value)</li>
+<li>Parameters provided using the -params-file option</li>
+<li>Config file specified using the -c my_config option</li>
+<li>The config file named nextflow.config in the current directory</li>
+<li>The config file named nextflow.config in the workflow project directory</li>
+<li>The config file $HOME/.nextflow/config</li>
+<li>Values defined within the pipeline script itself (e.g.&nbsp;main.nf)</li>
+</ol>
 <!-- A fulsome tour of the places in which configuration can be loaded - how overwriting works, and pointing out the common footguns when setting configuration objects in profiles. Here is also an ideal time to point out the potential mistakes that can occur when profiles share the same name as Nextflow configuration blocks.
 Include -params-file 
 Talk about the “Danger” block    - how to avoid the profiles footgun.
@@ -216,6 +238,7 @@ Fully qualified selector aliases
 Make a note of how loading profiles drops you back to the top-level configuration block. -->
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -353,13 +376,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./testing.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Troubleshooting</span></span>
+      <a href="./structure.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Workflow Structure</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./summary.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Summary</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./testing.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Troubleshooting</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

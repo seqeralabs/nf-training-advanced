@@ -20,6 +20,69 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -142,12 +205,12 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./testing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Troubleshooting</span></a>
+  <a href="./configuration.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Configuration</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./configuration.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Configuration</span></a>
+  <a href="./testing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Troubleshooting</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -182,7 +245,14 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#exercise" id="toc-exercise" class="nav-link active" data-scroll-target="#exercise">Exercise</a></li>
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -204,12 +274,293 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>To be introduced on day #2</p>
+<p>There exists in Groovy a wealth of helper classes that can be imported into Nextflow scripts. In this chapter, we create a very small Workflow using the FastP tool to investigate importing the Groovy JSONSlurper class.</p>
+<p>First, let’s move into the chapter 4 directory:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> chapter_04_groovy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s assume that we would like to pull in a samplesheet, parse the entries and run them through the FastP tool. So far, we have been concerned with local files, but Nextflow will handle remote files transparently:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    params<span class="op">.</span>input <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/v3.4/samplesheet_test.csv"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span>params<span class="op">.</span>input<span class="op">)</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="fu">splitCsv</span><span class="op">(</span>header<span class="op">:</span> <span class="kw">true</span><span class="op">)</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s write a small closure to parse each row into the now-familiar map + files shape. We might start by constructing the meta-map:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    params<span class="op">.</span>input <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/v3.4/samplesheet_test.csv"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span>params<span class="op">.</span>input<span class="op">)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="fu">splitCsv</span><span class="op">(</span>header<span class="op">:</span> <span class="kw">true</span><span class="op">)</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> row <span class="op">-&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        meta <span class="op">=</span> row<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span><span class="st">'sample'</span><span class="op">,</span> <span class="st">'strandedness'</span><span class="op">)</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        meta</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>… but this precludes the possibility of adding additional columns to the samplesheet. We might to ensure the parsing will capture any extra metadata columns should they be added. Instead, let’s partition the column names into those that begin with “fastq” and those that don’t:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">(</span>readKeys<span class="op">,</span> metaKeys<span class="op">)</span> <span class="op">=</span> row<span class="op">.</span><span class="fu">keySet</span><span class="op">().</span><span class="fu">split</span> <span class="op">{</span> it <span class="op">=~</span> <span class="st">/^fastq/</span> <span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+New methods
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We’ve introduced a new keySet method here. This is a method on Java’s LinkedHashMap class (<a href="https://docs.oracle.com/javase/8/docs/api/java/util/LinkedHashMap.html#keySet--">docs here</a>)</p>
+<p>We’re also using the <code>.split()</code> method, which divides collection based on the return value of the closure. The mrhaki blog <a href="https://blog.mrhaki.com/2009/12/groovy-goodness-splitting-with-closures.html">provides a succinct summary</a>.</p>
+</div>
+</div>
+<p>From here, let’s</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>reads <span class="op">=</span> row<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span>readKeys<span class="op">).</span><span class="fu">values</span><span class="op">().</span><span class="fu">collect</span> <span class="op">{</span> <span class="fu">file</span><span class="op">(</span>it<span class="op">)</span> <span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>… but we run into an error:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Argument of `file` function cannot be empty</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If we have a closer look at the samplesheet, we notice that not all rows have two read pairs. Let’s add a condition</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>reads <span class="op">=</span> row</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">subMap</span><span class="op">(</span>readKeys<span class="op">)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">values</span><span class="op">()</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">findAll</span> <span class="op">{</span> it <span class="op">!=</span> <span class="st">""</span> <span class="op">}</span> <span class="co">// Single-end reads will have an empty string</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">collect</span> <span class="op">{</span> <span class="fu">file</span><span class="op">(</span>it<span class="op">)</span> <span class="op">}</span> <span class="co">// Turn those strings into paths</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we need to construct the meta map. Let’s have a quick look at the FASTP module that I’ve already pre-defined:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>process FASTP <span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    container <span class="st">'quay.io/biocontainers/fastp:0.23.2--h79da9fb_0'</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    input<span class="op">:</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>meta<span class="op">),</span> <span class="fu">path</span><span class="op">(</span>reads<span class="op">)</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    output<span class="op">:</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>meta<span class="op">),</span> <span class="fu">path</span><span class="op">(</span><span class="st">'*.fastp.fastq.gz'</span><span class="op">)</span> <span class="op">,</span> optional<span class="op">:</span><span class="kw">true</span><span class="op">,</span> emit<span class="op">:</span> reads</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    tuple <span class="fu">val</span><span class="op">(</span>meta<span class="op">),</span> <span class="fu">path</span><span class="op">(</span><span class="st">'*.json'</span><span class="op">)</span>           <span class="op">,</span> emit<span class="op">:</span> json</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    script<span class="op">:</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">def</span> prefix <span class="op">=</span> task<span class="op">.</span>ext<span class="op">.</span>prefix <span class="op">?:</span> meta<span class="op">.</span>id</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>meta<span class="op">.</span>single_end<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        <span class="co">// SNIP</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        <span class="co">// SNIP</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I can see that we require two extra keys, <code>id</code> and <code>single_end</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>meta <span class="op">=</span> row<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span>metaKeys<span class="op">)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>meta<span class="op">.</span>id <span class="op">?=</span> meta<span class="op">.</span>sample</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>meta<span class="op">.</span>single_end <span class="op">=</span> reads<span class="op">.</span>size <span class="op">==</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is now able to be passed through to our FASTP process:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span>params<span class="op">.</span>input<span class="op">)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> <span class="fu">splitCsv</span><span class="op">(</span>header<span class="op">:</span> <span class="kw">true</span><span class="op">)</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> map <span class="op">{</span> row <span class="op">-&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">(</span>readKeys<span class="op">,</span> metaKeys<span class="op">)</span> <span class="op">=</span> row<span class="op">.</span><span class="fu">keySet</span><span class="op">().</span><span class="fu">split</span> <span class="op">{</span> it <span class="op">=~</span> <span class="st">/^fastq/</span> <span class="op">}</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    reads <span class="op">=</span> row<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span>readKeys<span class="op">).</span><span class="fu">values</span><span class="op">()</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">findAll</span> <span class="op">{</span> it <span class="op">!=</span> <span class="st">""</span> <span class="op">}</span> <span class="co">// Single-end reads will have an empty string</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">collect</span> <span class="op">{</span> <span class="fu">file</span><span class="op">(</span>it<span class="op">)</span> <span class="op">}</span> <span class="co">// Turn those strings into paths</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    meta <span class="op">=</span> row<span class="op">.</span><span class="fu">subMap</span><span class="op">(</span>metaKeys<span class="op">)</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    meta<span class="op">.</span>id <span class="op">?=</span> meta<span class="op">.</span>sample</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    meta<span class="op">.</span>single_end <span class="op">=</span> reads<span class="op">.</span>size <span class="op">==</span> <span class="dv">1</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>meta<span class="op">,</span> reads<span class="op">]</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> FASTP</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>FASTP<span class="op">.</span>out<span class="op">.</span>json <span class="op">|</span> view</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s assume that we want to pull some information out of these JSON files. To make our lives a little more convenient, let’s “publish” these json files so that they are more convenient. We’re going to discuss configuration more completely in a later chapter, but that’s no reason not to dabble a bit here.</p>
+<p>We’d like to add a <code>publishDir</code> directive to our FASTP process.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>process <span class="op">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    withName<span class="op">:</span> <span class="st">'FASTP'</span> <span class="op">{</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        publishDir <span class="op">=</span> <span class="op">[</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>            path<span class="op">:</span> <span class="op">{</span> <span class="st">"results/fastp/json"</span> <span class="op">},</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>            saveAs<span class="op">:</span> <span class="op">{</span> filename <span class="op">-&gt;</span> filename<span class="op">.</span><span class="fu">endsWith</span><span class="op">(</span><span class="st">'.json'</span><span class="op">)</span> <span class="op">?</span> filename <span class="op">:</span> <span class="kw">null</span> <span class="op">},</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">]</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Groovy Tip: Elvis Operator
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This pattern of returning something if it is true and <code>somethingElse</code> if not:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>somethingThatMightBeFalsey <span class="op">?</span> somethingThatMightBeFalsey <span class="op">:</span> somethingElse</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>has a shortcut in Groovy - the “Elvis” opeartor:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>somethingThatMightBeFalsey <span class="op">?:</span> somethingElse</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p>This enables us to iterate quickly to test out our JSON parsing without waiting on the FASTP caching to calculate on these slow virtual machines.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run . <span class="at">-resume</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s consider the possibility that we’d like to capture some of these metrics so that they can be used downstream. First, we’ll have a quick peek at the <a href="https://groovy-lang.org/documentation.html">Groovy docs</a> and I see that I need to import a <code>JsonSlurper</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> groovy<span class="op">.</span>json<span class="op">.</span>JsonSlurper</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">// We can also import a Yaml parser in the same manner if required:</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">// import org.yaml.snakeyaml.Yaml</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">// new Yaml().load(new FileReader('your/data.yml'))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now let’s create a second entrypoint to quickly pass these JSON files through some tests:</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Entrypoint developing
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Using a second Entrypoint allows us to do quick debugging or development using a small section of the workflow without disturbing the main flow.</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>workflow Jsontest <span class="op">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span><span class="st">"results/fastp/json/*.json"</span><span class="op">)</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>which we run with</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run . <span class="at">-resume</span> <span class="at">-entry</span> Jsontest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s create a small function at the top of the workflow to take the JSON path and pull out some basic metrics:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">def</span> getFilteringResult<span class="er">(</span><span class="ex">json_file</span><span class="kw">)</span> <span class="kw">{</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="ex">fastpResult</span> = new JsonSlurper<span class="er">(</span><span class="kw">)</span><span class="ex">.parseText</span><span class="er">(</span><span class="ex">json_file.text</span><span class="kw">)</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="exercise" class="level3">
+<h3 class="anchored" data-anchor-id="exercise">Exercise</h3>
+<p>The <code>fastpResult</code> returned from the <code>parseText</code> method is a large Map - a class which we’re already familiar with. Modify the <code>getFilteringResult</code> function to return just the <code>after_filtering</code> section of the report.</p>
+<details>
+<summary>
+Reveal answer
+</summary>
+<p>Here is one potential solution.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">def</span> <span class="fu">getFilteringResult</span><span class="op">(</span>json_file<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">new</span> <span class="fu">JsonSlurper</span><span class="op">().</span><span class="fu">parseText</span><span class="op">(</span>json_file<span class="op">.</span>text<span class="op">)</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">?.</span>summary</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">?.</span>after_filtering</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+New notation: ?.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This new notation is a null-safe access operator. The <code>?.summary</code> will access the summary property if the property exists.</p>
+</div>
+</div>
+</details>
+<p>We can then join this new map back to the original reads using the <code>join</code> operator:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>FASTP<span class="op">.</span>out<span class="op">.</span>json </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> map <span class="op">{</span> meta<span class="op">,</span> json <span class="op">-&gt;</span> <span class="op">[</span>meta<span class="op">,</span> <span class="fu">getFilteringResult</span><span class="op">(</span>json<span class="op">)]</span> <span class="op">}</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> <span class="fu">join</span><span class="op">(</span> FASTP<span class="op">.</span>out<span class="op">.</span>reads <span class="op">)</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> view</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="exercise-1" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-1">Exercise</h3>
+<p>Can you ammend this pipeline to create two channels that filter the reads to exclude any samples where the Q30 rate is less than 93.5%</p>
+<details>
+<summary>
+Reveal answer
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>FASTP<span class="op">.</span>out<span class="op">.</span>json </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> map <span class="op">{</span> meta<span class="op">,</span> json <span class="op">-&gt;</span> <span class="op">[</span>meta<span class="op">,</span> <span class="fu">getFilteringResult</span><span class="op">(</span>json<span class="op">)]</span> <span class="op">}</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> <span class="fu">join</span><span class="op">(</span> FASTP<span class="op">.</span>out<span class="op">.</span>reads <span class="op">)</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> map <span class="op">{</span> meta<span class="op">,</span> fastpMap<span class="op">,</span> reads <span class="op">-&gt;</span> <span class="op">[</span>meta <span class="op">+</span> fastpMap<span class="op">,</span> reads<span class="op">]</span> <span class="op">}</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> branch <span class="op">{</span> meta<span class="op">,</span> reads <span class="op">-&gt;</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    pass<span class="op">:</span> meta<span class="op">.</span>q30_rate <span class="op">&gt;=</span> <span class="fl">0.935</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    fail<span class="op">:</span> <span class="kw">true</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> set <span class="op">{</span> reads <span class="op">}</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>reads<span class="op">.</span>fail <span class="op">|</span> view <span class="op">{</span> meta<span class="op">,</span> reads <span class="op">-&gt;</span> <span class="st">"Failed: </span><span class="ss">${</span>meta<span class="op">.</span>id<span class="ss">}</span><span class="st">"</span> <span class="op">}</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>reads<span class="op">.</span>pass <span class="op">|</span> view <span class="op">{</span> meta<span class="op">,</span> reads <span class="op">-&gt;</span> <span class="st">"Passed: </span><span class="ss">${</span>meta<span class="op">.</span>id<span class="ss">}</span><span class="st">"</span> <span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<!-- ```{groovy}
+import groovy.json.JsonSlurper
+
+include { FASTP } from './modules/local/fastp/main.nf'
+
+def getFilteringResult(json_file) {
+    new JsonSlurper().parseText(json_file.text)
+    ?.summary
+    ?.after_filtering
+}
+
+workflow {
+    params.input = "https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet/v3.4/samplesheet_test.csv"
+
+    Channel.fromPath(params.input)
+    | splitCsv(header: true)
+    | map { row ->
+        (readKeys, metaKeys) = row.keySet().split { it =~ /^fastq/ }
+        reads = row.subMap(readKeys).values()
+        .findAll { it != "" } // Single-end reads will have an empty string
+        .collect { file(it) } // Turn those strings into paths
+        meta = row.subMap(metaKeys)
+        meta.id ?= meta.sample
+        meta.single_end = reads.size == 1
+        [meta, reads]
+    }
+    | FASTP
+
+    FASTP.out.json 
+    | map { meta, json -> [meta, getFilteringResult(json)] }
+    | join( FASTP.out.reads )
+    | map { meta, fastpMap, reads -> [meta + fastpMap, reads] }
+    | branch { meta, reads ->
+        pass: meta.q30_rate >= 0.935
+        fail: true
+    }
+    | set { reads }
+
+    reads.fail | view { meta, reads -> meta }
+}
+``` -->
 
 <!-- How and when to use java.nio.files classes to make your workflows and closures more stable and resilient. Also cover Jsonslurper, org.yaml.snakeyaml.Yaml.
 Use recent resolveSibling example -->
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

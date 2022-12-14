@@ -16,8 +16,8 @@ book:
         - grouping.qmd
         - groovy.qmd
         - structure.qmd
-        - testing.qmd
         - configuration.qmd
+        - testing.qmd
         - summary.qmd
     - part: Support
       chapters:
