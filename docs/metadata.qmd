@@ -231,5 +231,5 @@ process ExampleProcess {
     // ...
 ```
 
-This channel "shape" or cardinarlity is extremely common in nf-core modules and subworkflows and is criticial to enabling reusability of these modules.
+This channel "shape" or cardinarlity is extremely common in nf-core modules and subworkflows and is critical to enabling reusability of these modules.
 

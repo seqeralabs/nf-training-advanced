@@ -51,7 +51,7 @@ The `subMap` method will take a collection of keys and construct a _new_ map wit
 
 ### Exercise
 
-Can you extend our workflow in an _unsafe_ manner? Use the `set` operator to name the channel in our worflow above, and then `map` (the operator) over that without modification. In a separate map operation, try modifying the meta map in a way that is reflected in the first map.
+Can you extend our workflow in an _unsafe_ manner? Use the `set` operator to name the channel in our workflow above, and then `map` (the operator) over that without modification. In a separate map operation, try modifying the meta map in a way that is reflected in the first map.
 
 Note that we're trying to do the _wrong_ thing in this example to clarify what the correct approach might be.
 
