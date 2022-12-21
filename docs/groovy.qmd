@@ -173,7 +173,7 @@ This pattern of returning something if it is true and `somethingElse` if not:
 somethingThatMightBeFalsey ? somethingThatMightBeFalsey : somethingElse
 ```
 
-has a shortcut in Groovy - the "Elvis" opeartor:
+has a shortcut in Groovy - the "Elvis" operator:
 
 ```{groovy}
 somethingThatMightBeFalsey ?: somethingElse
@@ -258,7 +258,7 @@ FASTP.out.json
 
 ### Exercise
 
-Can you ammend this pipeline to create two channels that filter the reads to exclude any samples where the Q30 rate is less than 93.5%
+Can you amend this pipeline to create two channels that filter the reads to exclude any samples where the Q30 rate is less than 93.5%
 
 <details>
 <summary>Reveal answer</summary>

@@ -207,14 +207,14 @@ The construction of this map is very repetitive, and in the next chapter, we'll 
 
 The `multiMap` operator is a way of creating multiple channels from a single source.
 
-Let's assume we've been given a sampleshee that has tumor/normal pairs bundled together on the same row.
+Let's assume we've been given a samplesheet that has tumor/normal pairs bundled together on the same row.
 
 ```{bash}
 cd chapter_01_operators
 cat data/samplesheet.ugly.csv
 ```
 
-Using the `splitCsv` operator would give us one entry that would contain all four fastq files. Let's consider that we wanted to split these fastqs into separate channels for tumor and normal, we could use `mutliMap`:
+Using the `splitCsv` operator would give us one entry that would contain all four fastq files. Let's consider that we wanted to split these fastqs into separate channels for tumor and normal, we could use `multiMap`:
 
 ```{groovy}
 workflow {
@@ -237,12 +237,12 @@ workflow {
 
 ::: {.callout-tip}
 ## Tip: `multiMapCriteria`
-The closure supplied to `multiMap` needs to return multiple channels, so using named closures as described in the `map` section above will not work. Fortuntely, Nextflow provides the convenience `multiMapCriteria` method to allow you to define named `multiMap` closures should you need them. See the [`multiMap` documenation](https://www.nextflow.io/docs/latest/operator.html#multimap) for more info.
+The closure supplied to `multiMap` needs to return multiple channels, so using named closures as described in the `map` section above will not work. Fortunately, Nextflow provides the convenience `multiMapCriteria` method to allow you to define named `multiMap` closures should you need them. See the [`multiMap` documentation](https://www.nextflow.io/docs/latest/operator.html#multimap) for more info.
 :::
 
 ## `branch`
 
-In the example above, the `multiMap` operator was necssary because we were supplied with a samplesheet that combined two pairs of fastq per row. If we were to use the neater samplesheet, we could use the `branch` operator to achieve the same result.
+In the example above, the `multiMap` operator was necessary because we were supplied with a samplesheet that combined two pairs of fastq per row. If we were to use the neater samplesheet, we could use the `branch` operator to achieve the same result.
 
 ```{groovy}
 workflow {
@@ -289,7 +289,7 @@ How would you modify the element returned in the `tumor` channel to have the key
 Show answer
 </summary>
 
-There are many ways to accomplish this, but the map merging pattern introduced above can also be used to safely and concicely rename values in a map.
+There are many ways to accomplish this, but the map merging pattern introduced above can also be used to safely and concisely rename values in a map.
 
 ```{groovy}
 branch { meta, reads ->
@@ -425,7 +425,7 @@ workflow {
 
 <!-- `scan`
 
-The `scan` and `recurse` operators are experimental recusrive operators currently under consideration for addition into Nextflow. The discussion about the syntax and features is ongoing and you are welcome to provide contributions at [discussions/2521](https://github.com/nextflow-io/nextflow/discussions/2521). Note that these operators are experimental and the syntax and behavior may change in future releases.
+The `scan` and `recurse` operators are experimental recursive operators currently under consideration for addition into Nextflow. The discussion about the syntax and features is ongoing and you are welcome to provide contributions at [discussions/2521](https://github.com/nextflow-io/nextflow/discussions/2521). Note that these operators are experimental and the syntax and behavior may change in future releases.
 
 I'm only going to cover the `scan` operator here, as it is used more often and is more confusing for newcomers. -->
 
