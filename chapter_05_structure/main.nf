@@ -1,4 +1,3 @@
-
 workflow {
-    dognames = Channel.of("Argente", "Absolon", "Chowne")
+    names = Channel.of("Argente", "Absolon", "Chowne")
 }
