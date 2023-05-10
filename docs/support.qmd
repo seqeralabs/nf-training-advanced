@@ -1,3 +1,4 @@
-# Summary
+# Links
 
-In summary, this book has no content whatsoever.
+- Nextflow documentation: [www.nextflow.io/docs/latest](https://www.nextflow.io/docs/latest/)
+- Seqera support: [support@seqera.io](mailto:support@seqera.io)
