@@ -9,7 +9,7 @@ There are three directories in a Nextflow workflow repository that have a specia
 ## `./bin`
 The `bin` directory (if it exists) is always added to the `$PATH` for all tasks. If the tasks are performed on a remote machine, the directory is copied across to the new machine before the task begins. It is important to know that Nextflow will take care of updating `$PATH` and ensuring the files are available wherever the task is running, but will not change the permissions of any files in that directory. If a file is called by a task as an executable, the workflow developer must ensure that the file has the correct permissions to be executed.
 
-// TODO: Add example of adding a script to the bin directory and using it in the workflow
+<!-- TODO: Add example of adding a script to the bin directory and using it in the workflow -->
 
 ## `./templates`
 If a process script block is becoming too long, it can be moved to a template file. The template file can then be imported into the process script block using the `template` method. This is useful for keeping the process block tidy and readable. Nextflow's use of `$` to indicate variables also allows for directly testing the template file by running it as a script.

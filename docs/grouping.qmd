@@ -215,7 +215,7 @@ workflow {
 ```
 </details>
 
-Now that we have our repeats together in an output channel, we can combine them using advanced bioinformatics™
+Now that we have our repeats together in an output channel, we can combine them using "advanced bioinformatics":
 
 ```{groovy}
 process CombineBams {
