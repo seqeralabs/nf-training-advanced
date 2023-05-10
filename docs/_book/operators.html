@@ -343,8 +343,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>N E X T F L O W  ~  version 22.10.4
-Launching `./main.nf` [tender_khorana] DSL2 - revision: f3c3e751fe
+<pre><code>N E X T F L O W  ~  version 23.04.0
+Launching `./main.nf` [jolly_joliot] DSL2 - revision: f3c3e751fe
 3
 6
 11
@@ -391,8 +391,8 @@ Launching `./main.nf` [tender_khorana] DSL2 - revision: f3c3e751fe
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="fu">view</span><span class="op">(</span> prettyPrint <span class="op">)</span></span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>N E X T F L O W  ~  version 22.10.4
-Launching `./main.nf` [goofy_mirzakhani] DSL2 - revision: 987db913a7
+<pre><code>N E X T F L O W  ~  version 23.04.0
+Launching `./main.nf` [exotic_kalam] DSL2 - revision: 987db913a7
 Found '10' (class java.lang.Integer)
 Found '20' (class java.lang.Integer)
 Found '30' (class java.lang.Integer)
@@ -480,12 +480,12 @@ Convert Strings to Paths
 <section id="multimap" class="level2" data-number="1.4">
 <h2 data-number="1.4" class="anchored" data-anchor-id="multimap"><span class="header-section-number">1.4</span> <code>multiMap</code></h2>
 <p>The <code>multiMap</code> operator is a way of creating multiple channels from a single source.</p>
-<p>Let’s assume we’ve been given a sampleshee that has tumor/normal pairs bundled together on the same row.</p>
+<p>Let’s assume we’ve been given a samplesheet that has tumor/normal pairs bundled together on the same row.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> chapter_01_operators</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/samplesheet.ugly.csv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Using the <code>splitCsv</code> operator would give us one entry that would contain all four fastq files. Let’s consider that we wanted to split these fastqs into separate channels for tumor and normal, we could use <code>mutliMap</code>:</p>
+<p>Using the <code>splitCsv</code> operator would give us one entry that would contain all four fastq files. Let’s consider that we wanted to split these fastqs into separate channels for tumor and normal, we could use <code>multiMap</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span><span class="st">"data/samplesheet.ugly.csv"</span><span class="op">)</span></span>
@@ -514,13 +514,13 @@ Tip: <code>multiMapCriteria</code>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The closure supplied to <code>multiMap</code> needs to return multiple channels, so using named closures as described in the <code>map</code> section above will not work. Fortuntely, Nextflow provides the convenience <code>multiMapCriteria</code> method to allow you to define named <code>multiMap</code> closures should you need them. See the <a href="https://www.nextflow.io/docs/latest/operator.html#multimap"><code>multiMap</code> documenation</a> for more info.</p>
+<p>The closure supplied to <code>multiMap</code> needs to return multiple channels, so using named closures as described in the <code>map</code> section above will not work. Fortunately, Nextflow provides the convenience <code>multiMapCriteria</code> method to allow you to define named <code>multiMap</code> closures should you need them. See the <a href="https://www.nextflow.io/docs/latest/operator.html#multimap"><code>multiMap</code> documentation</a> for more info.</p>
 </div>
 </div>
 </section>
 <section id="branch" class="level2" data-number="1.5">
 <h2 data-number="1.5" class="anchored" data-anchor-id="branch"><span class="header-section-number">1.5</span> <code>branch</code></h2>
-<p>In the example above, the <code>multiMap</code> operator was necssary because we were supplied with a samplesheet that combined two pairs of fastq per row. If we were to use the neater samplesheet, we could use the <code>branch</code> operator to achieve the same result.</p>
+<p>In the example above, the <code>multiMap</code> operator was necessary because we were supplied with a samplesheet that combined two pairs of fastq per row. If we were to use the neater samplesheet, we could use the <code>branch</code> operator to achieve the same result.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">fromPath</span><span class="op">(</span><span class="st">"data/samplesheet.csv"</span><span class="op">)</span></span>
@@ -558,7 +558,7 @@ Tip: <code>multiMapCriteria</code>
 <summary>
 Show answer
 </summary>
-<p>There are many ways to accomplish this, but the map merging pattern introduced above can also be used to safely and concicely rename values in a map.</p>
+<p>There are many ways to accomplish this, but the map merging pattern introduced above can also be used to safely and concisely rename values in a map.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>branch <span class="op">{</span> meta<span class="op">,</span> reads <span class="op">-&gt;</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    tumor<span class="op">:</span> meta<span class="op">.</span>type <span class="op">==</span> <span class="st">"tumor"</span></span>
@@ -596,8 +596,8 @@ Merging maps is safe
 </div>
 <p>or by using <code>set</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Channel</span><span class="op">.</span><span class="fu">from</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">40</span><span class="op">,</span> <span class="dv">50</span><span class="op">)</span> </span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> branch <span class="op">{</span></span>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Channel</span><span class="op">.</span><span class="fu">from</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span><span class="dv">2</span><span class="op">,</span><span class="dv">3</span><span class="op">,</span><span class="dv">4</span><span class="op">,</span><span class="dv">5</span><span class="op">)</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="op">|</span> multiMap <span class="op">{</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    small<span class="op">:</span> it</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    large<span class="op">:</span> it <span class="op">*</span> <span class="dv">10</span></span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
@@ -667,8 +667,8 @@ Merging maps is safe
 <span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view</span>
 <span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>N E X T F L O W  ~  version 22.10.4
-Launching `./main.nf` [cheesy_jones] DSL2 - revision: 7dc1cc0039
+<pre><code>N E X T F L O W  ~  version 23.04.0
+Launching `./main.nf` [cheeky_feynman] DSL2 - revision: 7dc1cc0039
 [[id:sampleA, type:normal], [1, 2], [[data/reads/sampleA_rep1_normal_R1.fastq.gz, data/reads/sampleA_rep1_normal_R2.fastq.gz], [data/reads/sampleA_rep2_normal_R1.fastq.gz, data/reads/sampleA_rep2_normal_R2.fastq.gz]]]
 [[id:sampleA, type:tumor], [1, 2], [[data/reads/sampleA_rep1_tumor_R1.fastq.gz, data/reads/sampleA_rep1_tumor_R2.fastq.gz], [data/reads/sampleA_rep2_tumor_R1.fastq.gz, data/reads/sampleA_rep2_tumor_R2.fastq.gz]]]
 [[id:sampleB, type:normal], [1], [[data/reads/sampleB_rep1_normal_R1.fastq.gz, data/reads/sampleB_rep1_normal_R2.fastq.gz]]]
@@ -691,8 +691,8 @@ Launching `./main.nf` [cheesy_jones] DSL2 - revision: 7dc1cc0039
 <span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view</span>
 <span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>N E X T F L O W  ~  version 22.10.4
-Launching `./main.nf` [loving_lichterman] DSL2 - revision: 2c5476b133
+<pre><code>N E X T F L O W  ~  version 23.04.0
+Launching `./main.nf` [gigantic_celsius] DSL2 - revision: 2c5476b133
 [[id:sampleA, type:normal], 1, [data/reads/sampleA_rep1_normal_R1.fastq.gz, data/reads/sampleA_rep1_normal_R2.fastq.gz]]
 [[id:sampleA, type:normal], 2, [data/reads/sampleA_rep2_normal_R1.fastq.gz, data/reads/sampleA_rep2_normal_R2.fastq.gz]]
 [[id:sampleA, type:tumor], 1, [data/reads/sampleA_rep1_tumor_R1.fastq.gz, data/reads/sampleA_rep1_tumor_R2.fastq.gz]]
@@ -705,7 +705,7 @@ Launching `./main.nf` [loving_lichterman] DSL2 - revision: 2c5476b133
 </div>
 <!-- `scan`
 
-The `scan` and `recurse` operators are experimental recusrive operators currently under consideration for addition into Nextflow. The discussion about the syntax and features is ongoing and you are welcome to provide contributions at [discussions/2521](https://github.com/nextflow-io/nextflow/discussions/2521). Note that these operators are experimental and the syntax and behavior may change in future releases.
+The `scan` and `recurse` operators are experimental recursive operators currently under consideration for addition into Nextflow. The discussion about the syntax and features is ongoing and you are welcome to provide contributions at [discussions/2521](https://github.com/nextflow-io/nextflow/discussions/2521). Note that these operators are experimental and the syntax and behavior may change in future releases.
 
 I'm only going to cover the `scan` operator here, as it is used more often and is more confusing for newcomers. -->
 

@@ -1,11 +1,102 @@
+---
+engine: knitr
+---
+
 # Workflow Structure
 
-To be introduced on day #2
+There are three directories in a Nextflow workflow repository that have a special purpose:
 
-<!-- Introducing the lib and bin directories, as well as templates for larger processes. What should be included in a Docker file. Nextflow schema json. Standard directory structures for modules. Custom Groovy classes - leveraging custom Groovy.
+## `./bin`
+The `bin` directory (if it exists) is always added to the `$PATH` for all tasks. If the tasks are performed on a remote machine, the directory is copied across to the new machine before the task begins. It is important to know that Nextflow will take care of updating `$PATH` and ensuring the files are available wherever the task is running, but will not change the permissions of any files in that directory. If a file is called by a task as an executable, the workflow developer must ensure that the file has the correct permissions to be executed.
 
-Using groovy functions that load json. Use Harshil’s Fastp example for. Workflow helper class.
+<!-- TODO: Add example of adding a script to the bin directory and using it in the workflow -->
 
-Functions local in file
-Functions imported
-Functions in separate class -->
+## `./templates`
+If a process script block is becoming too long, it can be moved to a template file. The template file can then be imported into the process script block using the `template` method. This is useful for keeping the process block tidy and readable. Nextflow's use of `$` to indicate variables also allows for directly testing the template file by running it as a script.
+
+The chapter_05_structure directory already contains an example template - a very simple python script. We can add a new process that uses this template:
+
+```groovy
+process SayHiTemplate {
+    debug true
+    input: val(name)
+    script: template 'adder.py'    
+}
+```
+
+## `./lib`
+In the previous chapter, we saw the addition of small helper Groovy functions to the `main.nf` file. It may at times be helpful to bundle functionality into a new Groovy class. Any classes defined in the `lib` directory are available for use in the workflow - both `main.nf` and any imported modules. 
+
+Classes defined in `lib` can be used for a variety of purposes. For example, the [nf-core/rnaseq](https://github.com/nf-core/rnaseq/tree/master/lib) workflow uses five custom classes:
+1) `NfcoreSchema.groovy` for parsing the schema.json file and validating the workflow parameters.
+2) `NfcoreTemplate.groovy` for email templating and nf-core utility functions.
+3) `Utils.groovy` for provision of a single `checkCondaChannels` method.
+4) `WorkflowMain.groovy` for workflow setup and to call the `NfcoreTemplate` class.
+5) `WorkflowRnaseq.groovy` for the workflow-specific functions.
+
+The classes listed above all provide utility executed at the beginning of a workflow, and are generally used to "set up" the workflow. However, classes defined in `lib` can also be used to provide functionality to the workflow itself.
+
+Let's start by creating a `Dog` class in `./lib/Dog.groovy`:
+
+```groovy
+class Dog {
+    String name
+    Boolean isHungry = true
+}
+```
+
+We can create a new dog at the beginning of the workflow:
+
+```groovy
+workflow {
+    dog = new Dog(name: "fido")
+    log.info "Found a new dog: $dog"
+}
+```
+
+We can pass objects of our class through channels. Here we take a channel of dog names and create a channel of dogs:
+
+```groovy
+workflow {
+    Channel.of("Argente", "Absolon", "Chowne")
+    | map { new Dog(name: it) }
+    | view
+}
+```
+
+<!-- You can imagine imagine that  -->
+
+<!-- ```groovy
+import nextflow.io.ValueObject
+
+@ValueObject
+class Dog {
+    String name
+    Boolean isHungry
+
+    Dog Dog(String name) { 
+        this(name: name, isHungry: true)
+    }
+
+    Dog plus(Food food) {
+        return new Dog(name: name, isHungry: false)
+    }
+
+    String toString() {
+        return "Dog(name: ${name}, isHungry: ${isHungry})"
+    }
+}
+
+
+process FeedDog {
+    input: val(dog)
+    output: val(newdog)
+    exec: 
+    newdog = (dog + Food.BONE)
+}
+
+import nextflow.util.KryoHelper
+
+KryoHelper.register(Dog)
+
+``` -->

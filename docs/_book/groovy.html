@@ -407,7 +407,7 @@ Groovy Tip: Elvis Operator
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>somethingThatMightBeFalsey <span class="op">?</span> somethingThatMightBeFalsey <span class="op">:</span> somethingElse</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>has a shortcut in Groovy - the “Elvis” opeartor:</p>
+<p>has a shortcut in Groovy - the “Elvis” operator:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>somethingThatMightBeFalsey <span class="op">?:</span> somethingElse</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -421,9 +421,9 @@ Groovy Tip: Elvis Operator
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> groovy<span class="op">.</span>json<span class="op">.</span>JsonSlurper</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">// We can also import a Yaml parser in the same manner if required:</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">// import org.yaml.snakeyaml.Yaml</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">// new Yaml().load(new FileReader('your/data.yml'))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">// We can also import a Yaml parser just as easily:</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">//   import org.yaml.snakeyaml.Yaml</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">//   new Yaml().load(new FileReader('your/data.yml'))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now let’s create a second entrypoint to quickly pass these JSON files through some tests:</p>
 <div class="callout-note callout callout-style-default callout-captioned">
@@ -494,7 +494,7 @@ New notation: ?.
 </section>
 <section id="exercise-1" class="level3">
 <h3 class="anchored" data-anchor-id="exercise-1">Exercise</h3>
-<p>Can you ammend this pipeline to create two channels that filter the reads to exclude any samples where the Q30 rate is less than 93.5%</p>
+<p>Can you amend this pipeline to create two channels that filter the reads to exclude any samples where the Q30 rate is less than 93.5%</p>
 <details>
 <summary>
 Reveal answer
@@ -555,9 +555,6 @@ workflow {
     reads.fail | view { meta, reads -> meta }
 }
 ``` -->
-
-<!-- How and when to use java.nio.files classes to make your workflows and closures more stable and resilient. Also cover Jsonslurper, org.yaml.snakeyaml.Yaml.
-Use recent resolveSibling example -->
 
 
 </section>
