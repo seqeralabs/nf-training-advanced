@@ -251,7 +251,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul>
   <li><a href="#bin" id="toc-bin" class="nav-link active" data-scroll-target="#bin"><span class="toc-section-number">5.1</span>  <code>./bin</code></a></li>
   <li><a href="#templates" id="toc-templates" class="nav-link" data-scroll-target="#templates"><span class="toc-section-number">5.2</span>  <code>./templates</code></a></li>
-  <li><a href="#lib" id="toc-lib" class="nav-link" data-scroll-target="#lib"><span class="toc-section-number">5.3</span>  <code>./lib</code></a></li>
+  <li><a href="#lib" id="toc-lib" class="nav-link" data-scroll-target="#lib"><span class="toc-section-number">5.3</span>  <code>./lib</code></a>
+  <ul class="collapse">
+  <li><a href="#making-a-metadata-class" id="toc-making-a-metadata-class" class="nav-link" data-scroll-target="#making-a-metadata-class">Making a Metadata Class</a></li>
+  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise">Exercise</a></li>
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise</a></li>
+  <li><a href="#making-a-valueobject" id="toc-making-a-valueobject" class="nav-link" data-scroll-target="#making-a-valueobject">Making a ValueObject</a></li>
+  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -296,22 +303,160 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>In the previous chapter, we saw the addition of small helper Groovy functions to the <code>main.nf</code> file. It may at times be helpful to bundle functionality into a new Groovy class. Any classes defined in the <code>lib</code> directory are available for use in the workflow - both <code>main.nf</code> and any imported modules.</p>
 <p>Classes defined in <code>lib</code> can be used for a variety of purposes. For example, the <a href="https://github.com/nf-core/rnaseq/tree/master/lib">nf-core/rnaseq</a> workflow uses five custom classes: 1) <code>NfcoreSchema.groovy</code> for parsing the schema.json file and validating the workflow parameters. 2) <code>NfcoreTemplate.groovy</code> for email templating and nf-core utility functions. 3) <code>Utils.groovy</code> for provision of a single <code>checkCondaChannels</code> method. 4) <code>WorkflowMain.groovy</code> for workflow setup and to call the <code>NfcoreTemplate</code> class. 5) <code>WorkflowRnaseq.groovy</code> for the workflow-specific functions.</p>
 <p>The classes listed above all provide utility executed at the beginning of a workflow, and are generally used to “set up” the workflow. However, classes defined in <code>lib</code> can also be used to provide functionality to the workflow itself.</p>
-<p>Let’s start by creating a <code>Dog</code> class in <code>./lib/Dog.groovy</code>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Dog <span class="op">{</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">String</span> name</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Boolean</span> isHungry <span class="op">=</span> <span class="kw">true</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>We can create a new dog at the beginning of the workflow:</p>
+<section id="making-a-metadata-class" class="level3">
+<h3 class="anchored" data-anchor-id="making-a-metadata-class">Making a Metadata Class</h3>
+<p>Let’s consider an example where we create our own custom class to handle metadata. We can create a new class in <code>./lib/Metadata.groovy</code>. We’ll extend the built-in <code>HashMap</code> class, and add a simple method to return a value:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Metadata <span class="kw">extends</span> <span class="bu">HashMap</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">def</span> <span class="fu">hi</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"Hello, workshop participants!"</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We can then use this class in our workflow:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    dog <span class="op">=</span> <span class="kw">new</span> <span class="fu">Dog</span><span class="op">(</span>name<span class="op">:</span> <span class="st">"fido"</span><span class="op">)</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    log<span class="op">.</span><span class="fu">info</span> <span class="st">"Found a new dog: </span><span class="ss">$dog</span><span class="st">"</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>We can pass objects of our class through channels. Here we take a channel of dog names and create a channel of dogs:</p>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">of</span><span class="op">(</span><span class="st">"Montreal"</span><span class="op">)</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> <span class="kw">new</span> <span class="fu">Metadata</span><span class="op">()</span> <span class="op">}</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We can use the new <code>hi</code> method in the workflow:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">of</span><span class="op">(</span><span class="st">"Argente"</span><span class="op">,</span> <span class="st">"Absolon"</span><span class="op">,</span> <span class="st">"Chowne"</span><span class="op">)</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> <span class="kw">new</span> <span class="fu">Dog</span><span class="op">(</span>name<span class="op">:</span> it<span class="op">)</span> <span class="op">}</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">of</span><span class="op">(</span><span class="st">"Montreal"</span><span class="op">)</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> <span class="kw">new</span> <span class="fu">Metadata</span><span class="op">()</span> <span class="op">}</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view <span class="op">{</span> it<span class="op">.</span><span class="fu">hi</span><span class="op">()</span> <span class="op">}</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>At the moment, the <code>Metadata</code> class is not making use of the “Montreal” being passed into the closure. Let’s change that by adding a constructor to the class:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Metadata <span class="kw">extends</span> <span class="bu">HashMap</span> <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Metadata</span><span class="op">(</span><span class="bu">String</span> location<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">this</span><span class="op">.</span>location <span class="op">=</span> location</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">def</span> <span class="fu">hi</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="kw">this</span><span class="op">.</span>location <span class="op">?</span> <span class="st">"Hello, from </span><span class="ss">${</span><span class="kw">this</span><span class="op">.</span>location<span class="ss">}</span><span class="st">!"</span> <span class="op">:</span> <span class="st">"Hello, workshop participants!"</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Which we can use like so:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">of</span><span class="op">(</span><span class="st">"Montreal"</span><span class="op">)</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> place <span class="op">-&gt;</span> <span class="kw">new</span> <span class="fu">Metadata</span><span class="op">(</span>place<span class="op">)</span> <span class="op">}</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view <span class="op">{</span> it<span class="op">.</span><span class="fu">hi</span><span class="op">()</span> <span class="op">}</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We can also use this method when passing the object to a process:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>process UseMeta <span class="op">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    input<span class="op">:</span> <span class="fu">val</span><span class="op">(</span>meta<span class="op">)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    output<span class="op">:</span> <span class="fu">path</span><span class="op">(</span><span class="st">"out.txt"</span><span class="op">)</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    script<span class="op">:</span> <span class="st">"echo '</span><span class="ss">${</span>meta<span class="op">.</span><span class="fu">hi</span><span class="op">()</span><span class="ss">}</span><span class="st">' | tee out.txt"</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span>   </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">of</span><span class="op">(</span><span class="st">"Montreal"</span><span class="op">)</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> place <span class="op">-&gt;</span> <span class="kw">new</span> <span class="fu">Metadata</span><span class="op">(</span>place<span class="op">)</span> <span class="op">}</span> </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> UseMeta</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Why might this be helpful? You can add extra classes to the metadata which can be computed from the existing metadata. For exmaple, we might want want to grab the adapter prefix:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">def</span> <span class="fu">getAdapterStart</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span>adapter<span class="op">?.</span><span class="fu">substring</span><span class="op">(</span><span class="dv">0</span><span class="op">,</span> <span class="dv">3</span><span class="op">)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Which we might use like so:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>process UseMeta <span class="op">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    input<span class="op">:</span> <span class="fu">val</span><span class="op">(</span>meta<span class="op">)</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    output<span class="op">:</span> <span class="fu">path</span><span class="op">(</span><span class="st">"out.txt"</span><span class="op">)</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    script<span class="op">:</span> <span class="st">"echo '</span><span class="ss">${</span>meta<span class="op">.</span>adapter<span class="ss">}</span><span class="st"> prefix is </span><span class="ss">${</span>meta<span class="op">.</span><span class="fu">getAdapterStart</span><span class="op">()</span><span class="ss">}</span><span class="st">' | tee out.txt"</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">of</span><span class="op">(</span><span class="st">"Montreal"</span><span class="op">)</span> </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> place <span class="op">-&gt;</span> <span class="kw">new</span> <span class="fu">Metadata</span><span class="op">(</span>place<span class="op">)</span> <span class="op">}</span> </span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> it <span class="op">+</span> <span class="op">[</span>adapter<span class="op">:</span><span class="st">"AACGTAGCTTGAC"</span><span class="op">]</span> <span class="op">}</span> </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> UseMeta</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You might even want to reach out to external services such as a LIMS or e-utilis API. Here we add a dummy “getSampleName()” method that reaches out to a public API:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">def</span> <span class="fu">getSampleName</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">def</span> get <span class="op">=</span> <span class="kw">new</span> <span class="bu">URL</span><span class="op">(</span><span class="st">'https://postman-echo.com/get?sampleName=Fido'</span><span class="op">).</span><span class="fu">openConnection</span><span class="op">()</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">def</span> getRC <span class="op">=</span> get<span class="op">.</span><span class="fu">getResponseCode</span><span class="op">();</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>getRC<span class="op">.</span><span class="fu">equals</span><span class="op">(</span><span class="dv">200</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        JsonSlurper jsonSlurper <span class="op">=</span> <span class="kw">new</span> <span class="fu">JsonSlurper</span><span class="op">()</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">def</span> json <span class="op">=</span> jsonSlurper<span class="op">.</span><span class="fu">parseText</span><span class="op">(</span>get<span class="op">.</span><span class="fu">getInputStream</span><span class="op">().</span><span class="fu">getText</span><span class="op">())</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> json<span class="op">.</span>args<span class="op">.</span>sampleName</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Which we can use like so:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>process UseMeta <span class="op">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    input<span class="op">:</span> <span class="fu">val</span><span class="op">(</span>meta<span class="op">)</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    output<span class="op">:</span> <span class="fu">path</span><span class="op">(</span><span class="st">"out.txt"</span><span class="op">)</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    script<span class="op">:</span> </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"echo '</span><span class="ss">${</span>meta<span class="op">.</span>adapter<span class="ss">}</span><span class="st"> prefix is </span><span class="ss">${</span>meta<span class="op">.</span><span class="fu">getAdapterStart</span><span class="op">()</span><span class="ss">}</span><span class="st"> with sampleName </span><span class="ss">${</span>meta<span class="op">.</span><span class="fu">getSampleName</span><span class="op">()</span><span class="ss">}</span><span class="st">' | tee out.txt"</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Nextflow Caching
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When we start passing custom classes through the workflow, it’s important to understand a little about the Nextflow caching mechanism. When a task is run, a unique hash is calculated based on the task name, the input files/values, and the input parameters. Our class extends from <code>HashMap</code>, which means that the hash will be calculated based on the contents of the <code>HashMap</code>. If we add a new method to the class, or ammend a class method, this does not change the value of the objects in the hash, which means that the hash will not change.</p>
+</div>
+</div>
+</section>
+<section id="exercise" class="level3">
+<h3 class="anchored" data-anchor-id="exercise">Exercise</h3>
+<p>Can you show changing a method in our <code>Metadata</code> class does not change the hash?</p>
+<details>
+<summary>
+Show answer
+</summary>
+<p>We might increase the length of the adapter prefix to 5 characters:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>    <span class="dt">def</span> <span class="fu">getAdapterStart</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>        <span class="kw">this</span><span class="op">.</span>adapter<span class="op">?.</span><span class="fu">substring</span><span class="op">(</span><span class="dv">0</span><span class="op">,</span> <span class="dv">5</span><span class="op">)</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+Changing this method and resuming the workflow will not change the hash, and the existing method will be used.
+</details>
+<p>We are not limited to using or extending the built-in Groovy classes. Let’s start by creating a <code>Dog</code> class in <code>./lib/Dog.groovy</code>:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Dog <span class="op">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">String</span> name</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Boolean</span> isHungry <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We can create a new dog at the beginning of the workflow:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    dog <span class="op">=</span> <span class="kw">new</span> <span class="fu">Dog</span><span class="op">(</span>name<span class="op">:</span> <span class="st">"fido"</span><span class="op">)</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    log<span class="op">.</span><span class="fu">info</span> <span class="st">"Found a new dog: </span><span class="ss">$dog</span><span class="st">"</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We can pass objects of our class through channels. Here we take a channel of dog names and create a channel of dogs:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>workflow <span class="op">{</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Channel</span><span class="op">.</span><span class="fu">of</span><span class="op">(</span><span class="st">"Argente"</span><span class="op">,</span> <span class="st">"Absolon"</span><span class="op">,</span> <span class="st">"Chowne"</span><span class="op">)</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> map <span class="op">{</span> <span class="kw">new</span> <span class="fu">Dog</span><span class="op">(</span>name<span class="op">:</span> it<span class="op">)</span> <span class="op">}</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> view</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If we try to use this new class in a resumed process, no caches will be used.</p>
+</section>
+<section id="exercise-1" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-1">Exercise</h3>
+<p>Show that the <code>Dog</code> class is not cached when resuming a workflow.</p>
+</section>
+<section id="making-a-valueobject" class="level3">
+<h3 class="anchored" data-anchor-id="making-a-valueobject">Making a ValueObject</h3>
+<p>Nextflow has provided a decorator to help serialize your custom classes. By adding <code>@ValueObject</code> to the class definition, Nextflow will automatically serialize the class and cache it. This is useful if you want to pass a custom class through a channel, or if you want to use the class in a resumed workflow.</p>
+<p>Let’s add the decorator to our <code>Dog</code> class:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> nextflow<span class="op">.</span>io<span class="op">.</span>ValueObject</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>@ValueObject</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Dog <span class="op">{</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">String</span> name</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Boolean</span> isHungry <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Lastly, we will need to register the class with Kyro, the Java serialization framework. Again, Nextflow provides a helper method to do this. We can add the following to the <code>main.nf</code> file:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> nextflow<span class="op">.</span>util<span class="op">.</span>KryoHelper</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>KryoHelper<span class="op">.</span><span class="fu">register</span><span class="op">(</span>Dog<span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="exercise-2" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-2">Exercise</h3>
+<p>Show that the <code>Dog</code> class can now be used in processes and cached correctly.</p>
 <!-- You can imagine imagine that  -->
 <!-- ```groovy
 import nextflow.io.ValueObject
@@ -349,6 +494,7 @@ KryoHelper.register(Dog)
 ``` -->
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
